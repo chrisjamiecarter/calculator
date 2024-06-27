@@ -82,9 +82,34 @@ namespace CalculatorProgram
                 Console.WriteLine($"Calculations performed: {calculator.UsageCount}.");
 
                 // Wait for the user to respond before closing.
-                Console.Write("Press 'n' and Enter to close the app, or press any other key and Enter to continue: ");
-                if (Console.ReadLine() == "n") endApp = true;
-
+                Console.WriteLine("Choose an option from the following list:");
+                Console.WriteLine("\tn - New Calculation");
+                Console.WriteLine("\tv - View History");
+                Console.WriteLine("\tc - Close");
+                Console.Write("Your option? ");
+                
+                op = Console.ReadLine();
+                if (op == null || !Regex.IsMatch(op, "[n|v|c]"))
+                {
+                    Console.WriteLine("Error: Unrecognized input.");
+                }
+                else
+                {
+                    // Only action v & c.
+                    switch (op)
+                    {
+                        case "v":
+                            calculator.History.ForEach(x => Console.WriteLine(x));
+                            Console.Write("Press 'd' and Enter to delete the history, or press any other key and Enter to continue: ");
+                            if (Console.ReadLine() == "d") calculator.ClearHistory();
+                            break;
+                        case "c":
+                            endApp = true;
+                            break;
+                    default:
+                            break;
+                    }
+                }
                 Console.WriteLine("\n"); // Friendly linespacing.
             }
 

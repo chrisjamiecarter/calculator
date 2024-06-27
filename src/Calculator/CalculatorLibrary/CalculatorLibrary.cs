@@ -26,6 +26,9 @@ namespace CalculatorLibrary
             _writer.WriteStartObject();
             _writer.WritePropertyName("Operations");
             _writer.WriteStartArray();
+
+            // Initialise the History list.
+            History = [];
         }
 
         #endregion
@@ -33,8 +36,15 @@ namespace CalculatorLibrary
 
         public int UsageCount { get; private set; }
 
+        public List<string> History { get; }
+
         #endregion
         #region Methods: Public
+
+        public void ClearHistory()
+        {
+            History.Clear();
+        }
 
         public double DoOperation(double num1, double num2, string op)
         {
@@ -81,6 +91,9 @@ namespace CalculatorLibrary
             _writer.WritePropertyName("Result");
             _writer.WriteValue(result);
             _writer.WriteEndObject();
+
+            // Add to History.
+            History.Add($"{num1} {op} {num2} = {result}");
 
             // Increment the usage counter that records how many operations have been performed.
             UsageCount++;
