@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using CalculatorLibrary.Constants;
+using CalculatorLibrary.Models;
+using Newtonsoft.Json;
 
 namespace CalculatorLibrary
 {
@@ -21,7 +23,7 @@ namespace CalculatorLibrary
             {
                 Formatting = Formatting.Indented
             };
-            
+
             // Create the root object, and start the operations array.
             _writer.WriteStartObject();
             _writer.WritePropertyName("Operations");
@@ -34,9 +36,11 @@ namespace CalculatorLibrary
         #endregion
         #region Properties
 
+        public bool HasHistoryItems => History.Count > 0;
+
         public int UsageCount { get; private set; }
 
-        public List<string> History { get; }
+        public List<Calculation> History { get; }
 
         #endregion
         #region Methods: Public
@@ -46,10 +50,12 @@ namespace CalculatorLibrary
             History.Clear();
         }
 
-        public double DoOperation(double num1, double num2, string op)
+        public double DoOperation(double num1, double num2, char option)
         {
             // Default value is "not-a-number" if an operation, such as division, could result in an error.
             double result = double.NaN;
+
+            string operationSymbol = "";
 
             // Write operation data to JSON log file.
             _writer.WriteStartObject();
@@ -60,21 +66,25 @@ namespace CalculatorLibrary
             _writer.WritePropertyName("Operation");
 
             // Use a switch statement to do the math.
-            switch (op)
+            switch (option)
             {
-                case "a":
+                case 'a':
+                    operationSymbol = OperationSymbol.Addition;
                     result = num1 + num2;
                     _writer.WriteValue("Add");
                     break;
-                case "s":
+                case 's':
+                    operationSymbol = OperationSymbol.Subtraction;
                     result = num1 - num2;
                     _writer.WriteValue("Subtract");
                     break;
-                case "m":
+                case 'm':
+                    operationSymbol = OperationSymbol.Multiplication;
                     result = num1 * num2;
                     _writer.WriteValue("Multiply");
                     break;
-                case "d":
+                case 'd':
+                    operationSymbol = OperationSymbol.Division;
                     // Ask the user to enter a non-zero divisor.
                     if (num2 != 0)
                     {
@@ -93,7 +103,13 @@ namespace CalculatorLibrary
             _writer.WriteEndObject();
 
             // Add to History.
-            History.Add($"{num1} {op} {num2} = {result}");
+            History.Add(new Calculation()
+            {
+                FirstNumber = num1,
+                SecondNumber = num2,
+                Option = option,
+                Result = result
+            });
 
             // Increment the usage counter that records how many operations have been performed.
             UsageCount++;
