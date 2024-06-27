@@ -3,16 +3,17 @@ using CalculatorLibrary;
 
 namespace CalculatorProgram
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             bool endApp = false;
+            
             // Display title as the C# console calculator app.
             Console.WriteLine("Console Calculator in C#\r");
             Console.WriteLine("------------------------\n");
 
-            Calculator calculator = new Calculator();
+            var calculator = new Calculator();
 
             while (!endApp)
             {
@@ -76,6 +77,9 @@ namespace CalculatorProgram
                     }
                 }
                 Console.WriteLine("------------------------\n");
+
+                // Display the usage count.
+                Console.WriteLine($"Calculations performed: {calculator.UsageCount}.");
 
                 // Wait for the user to respond before closing.
                 Console.Write("Press 'n' and Enter to close the app, or press any other key and Enter to continue: ");
