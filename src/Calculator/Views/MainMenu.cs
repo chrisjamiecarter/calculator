@@ -6,6 +6,7 @@
 using System.Text;
 using CalculatorLibrary;
 using CalculatorLibrary.Constants;
+using CalculatorLibrary.Models;
 using CalculatorProgram.Enums;
 using CalculatorProgram.Utilities;
 
@@ -54,19 +55,27 @@ internal class MainMenu
     }
 
     #endregion
-    #region Methods: Internal Static
+    #region Methods: Internal
 
     internal ProgramStatus Show()
     {
         Console.Clear();
         Console.Write(MenuText);
         
-        var option = UserInputReader.GetChar("Enter your selection: ", "[n|N|r|R|v|V|c|C|q|Q]");
+        var option = UserInputReader.GetChar("Enter your selection: ", AllowedChars.MainMenuInput);
 
         return PerformOption(option);
     }
 
-    internal ProgramStatus PerformOption(char option)
+    internal void Close()
+    {
+        _calculator.Finish();
+    }
+
+    #endregion
+    #region Methods: Private
+
+    private ProgramStatus PerformOption(char option)
     {
         // Retain Started unless explicitly change (i.e. quit chosen).
         var output = ProgramStatus.Started;
@@ -79,10 +88,8 @@ internal class MainMenu
             case 'n':
                 // New calculation.
                 var newCalculation = CalculationPage.Show();
-                newCalculation.Result = _calculator.DoOperation(newCalculation.FirstNumber, newCalculation.SecondNumber, newCalculation.Option);
-                Console.WriteLine(newCalculation.ToString());
-                Console.WriteLine("Press any key to continue...");
-                Console.Read();
+                newCalculation = _calculator.DoOperation(newCalculation);
+                ShowResult(newCalculation);
                 break;
             case 'r':
                 // Recall calculation.
@@ -90,15 +97,12 @@ internal class MainMenu
                 {
                     var firstNumber = RecallPage.Show(_calculator.History);
                     var recallCalculation = CalculationPage.Show(firstNumber);
-                    recallCalculation.Result = _calculator.DoOperation(recallCalculation.FirstNumber, recallCalculation.SecondNumber, recallCalculation.Option);
-                    Console.WriteLine(recallCalculation.ToString());
-                    Console.WriteLine("Press any key to continue...");
-                    Console.Read();
+                    recallCalculation = _calculator.DoOperation(recallCalculation);
+                    ShowResult(recallCalculation);
                 }
                 else
                 {
-                    Console.WriteLine("No history items to recall. Press any key to continue...");
-                    Console.Read();
+                    MessagePage.Show("Recall", "No history items to recall.");
                 }
                 break;
             case 'v':
@@ -109,33 +113,33 @@ internal class MainMenu
                 }
                 else
                 {
-                    Console.WriteLine("No history items to view. Press any key to continue...");
-                    Console.Read();
+                    MessagePage.Show("History", "No history items to view.");
                 }
                 break;
             case 'c':
                 // Clear calculation history.
                 _calculator.ClearHistory();
-                Console.WriteLine("History cleared. Press any key to continue...");
-                Console.Read();
-
+                MessagePage.Show("History", "History cleared.");
                 break;
             case 'q':
                 // Quit.
                 output = ProgramStatus.Stopped;
                 break;
             default:
-                Console.WriteLine("Invalid option selected. Press any key to continue...");
-                Console.Read();
+                MessagePage.Show("Error", "Invalid option selected.");
                 break;
         }
 
         return output;
     }
 
-    internal void Close()
+    private void ShowResult(Calculation calculation)
     {
-        _calculator.Finish();
+        var sb = new StringBuilder();
+        sb.AppendLine(calculation.ToString());
+        sb.AppendLine();
+        sb.Append($"Calculations performed: {_calculator.UsageCount}");
+        MessagePage.Show("Result", sb.ToString());
     }
 
     #endregion

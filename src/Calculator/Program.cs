@@ -6,26 +6,25 @@
 using CalculatorProgram.Enums;
 using CalculatorProgram.Views;
 
-namespace CalculatorProgram
+namespace CalculatorProgram;
+
+internal class Program
 {
-    internal class Program
+    #region Methods: Private Static
+
+    private static void Main(string[] args)
     {
-        #region Methods: Private Static
-
-        private static void Main(string[] args)
+        var status = ProgramStatus.Started;
+        
+        var mainMenu = new MainMenu();
+        while (status != ProgramStatus.Stopped)
         {
-            var status = ProgramStatus.Started;
-            
-            var mainMenu = new MainMenu();
-            while (status != ProgramStatus.Stopped)
-            {
-                status = mainMenu.Show();
-            }
-            mainMenu.Close();
-
-            return;
+            status = mainMenu.Show();
         }
+        mainMenu.Close();
 
-        #endregion
+        return;
     }
+
+    #endregion
 }
