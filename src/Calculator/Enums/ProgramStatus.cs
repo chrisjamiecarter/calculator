@@ -4,11 +4,10 @@
 // Enum for the variations of program status'.
 // -------------------------------------------------------------------------------------------------
 
-namespace CalculatorProgram.Enums
+namespace CalculatorProgram.Enums;
+
+internal enum ProgramStatus
 {
-    internal enum ProgramStatus
-    {
-        Started,
-        Stopped
-    }
+    Started,
+    Stopped
 }
