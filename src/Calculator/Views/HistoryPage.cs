@@ -1,7 +1,7 @@
 ﻿// -------------------------------------------------------------------------------------------------
 // CalculatorProgram.Views.HistoryMenu
 // -------------------------------------------------------------------------------------------------
-// The history menu console view of the application.
+// The history page console view of the application.
 // -------------------------------------------------------------------------------------------------
 using System.Text;
 using CalculatorLibrary.Constants;
@@ -26,7 +26,10 @@ internal class HistoryPage
         Console.Read();
     }
 
-    internal static string MenuText(List<Calculation> history)
+    #endregion
+    #region Methods: Private Static
+
+    private static string MenuText(List<Calculation> history)
     {
         var sb = new StringBuilder();
         sb.AppendLine("----------------------------------------");

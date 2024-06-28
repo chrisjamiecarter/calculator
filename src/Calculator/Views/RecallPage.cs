@@ -17,11 +17,6 @@ internal class RecallPage
     private const string PageTitle = "Recall";
 
     #endregion
-    #region Properties
-
-
-
-    #endregion
     #region Methods: Internal Static
 
     internal static double Show(List<Calculation> history)
@@ -35,7 +30,10 @@ internal class RecallPage
         return history[option].Result;
     }
 
-    internal static string MenuText(List<Calculation> history)
+    #endregion
+    #region Methods: Private Static
+
+    private static string MenuText(List<Calculation> history)
     {
         var sb = new StringBuilder();
         sb.AppendLine("----------------------------------------");

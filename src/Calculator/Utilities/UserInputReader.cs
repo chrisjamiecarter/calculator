@@ -3,7 +3,6 @@
 // -------------------------------------------------------------------------------------------------
 // Helper class to present a question and return a valid user response from the console.
 // -------------------------------------------------------------------------------------------------
-using System.Text.RegularExpressions;
 
 namespace CalculatorProgram.Utilities;
 
@@ -11,31 +10,48 @@ internal class UserInputReader
 {
     #region Methods: Internal Static
 
-    internal static char GetChar(string message, string allowedCharsPattern)
+    internal static char GetChar(string message, char[] allowedChars)
     {
         string? input = "";
+        char inputChar;
         char output;
+        bool validated = false;
 
         Console.Write(message);
         input = Console.ReadLine();
 
-        // Note: this will validate the input.
-        while (string.IsNullOrWhiteSpace(input) || !Regex.IsMatch(input, allowedCharsPattern))
+
+        while (!validated)
         {
-            Console.Write($"This is not valid input. {message}");
-            input = Console.ReadLine();
+            // Validation 1: We must have something.
+            if (!string.IsNullOrWhiteSpace(input))
+            {
+                // We now know we have at least 1 char in the input, so convert input string to char.
+                inputChar = input.First();
+                                
+                // Validation 2: Input must be an allowed char.
+                if (allowedChars.Contains(inputChar))
+                {
+                    validated = true;
+                }
+            }
+            
+            // Get input again if invalid.
+            if (!validated)
+            {
+                Console.Write($"This is not valid input. {message}");
+                input = Console.ReadLine();
+            }
         }
 
-        // Converts input string to output char.
-        output = input.First();
-
+        output = input!.First();
         return output;
     }
 
     internal static double GetDouble(string message)
     {
         string? input = "";
-        double output = 0;
+        double output = double.NaN;
         
         Console.Write(message);
         input = Console.ReadLine();

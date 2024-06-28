@@ -11,8 +11,4 @@
     <ProjectReference Include="..\CalculatorLibrary\CalculatorLibrary.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Logic\" />
-  </ItemGroup>
-
 </Project>
